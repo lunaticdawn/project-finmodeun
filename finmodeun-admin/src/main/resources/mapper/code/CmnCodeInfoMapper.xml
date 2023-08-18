@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.finmodeun.admin.code.mapper.CmnCodeInfoMapper">
+    <select id="selectCmnCodeInfoList" resultType="kr.co.finmodeun.admin.code.dto.CmnCodeInfoDto">
+        /* kr.co.finmodeun.admin.code.mapper.CmnCodeInfoMapper.selectCmnCodeInfoList */
+        SELECT
+            CMN_CODE
+            , CODE_NAME
+            , PARENT_CODE
+            , SORT_ORDER
+            , DISPLAY_YN
+        FROM
+            CMN_CODE_INFO
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(parentCode)">
+                AND PARENT_CODE = #{parentCode}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(displayYn)">
+                AND DISPLAY_YN = #{displayYn}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(codeName)">
+                AND CODE_NAME LIKE '%' + #{codeName} + '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCmnCodeInfo" resultType="kr.co.finmodeun.admin.code.dto.CmnCodeInfoDto">
+        /* kr.co.finmodeun.admin.code.mapper.CmnCodeInfoMapper.selectCmnCodeInfo */
+        SELECT
+            CMN_CODE
+            , CODE_NAME
+            , PARENT_CODE
+            , CODE_DESC
+            , SORT_ORDER
+            , DISPLAY_YN
+        FROM
+            CMN_CODE_INFO
+        WHERE
+            CMN_CODE = #{cmnCode}
+            AND PARENT_CODE = #{parentCode}
+    </select>
+
+    <insert id="insertCmnCodeInfo">
+        /* kr.co.finmodeun.admin.code.mapper.CmnCodeInfoMapper.insertCmnCodeInfo */
+        INSERT INTO CMN_CODE_INFO (
+            CMN_CODE
+            , CODE_NAME
+            , PARENT_CODE
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(codeDesc)">
+                , CODE_DESC
+            </if>
+            <if test="sortOrder != null">
+                , SORT_ORDER
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(displayYn)">
+                , DISPLAY_YN
+            </if>
+            , REG_ID
+            , REG_DT
+        ) VALUES (
+            #{cmnCode}
+            , #{codeName}
+            , #{parentCode}
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(codeDesc)">
+                , #{codeDesc}
+            </if>
+            <if test="sortOrder != null">
+                , #{sortOrder}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(displayYn)">
+                , #{displayYn}
+            </if>
+            , #{regId}
+            , CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateCmnCodeInfo">
+        /* kr.co.finmodeun.admin.code.mapper.CmnCodeInfoMapper.updateCmnCodeInfo */
+        UPDATE CMN_CODE_INFO
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(codeName)">
+                , CODE_NAME = #{codeName}
+            </if>
+            , CODE_DESC = #{codeDesc}
+            <if test="sortOrder != null">
+                , SORT_ORDER = #{sortOrder}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(displayYn)">
+                , DISPLAY_YN = #{displayYn}
+            </if>
+            , MOD_ID = #{modId}
+            , MOD_DT = CURRENT_TIMESTAMP
+        </set>
+        WHERE
+            CMN_CODE = #{cmnCode}
+            AND PARENT_CODE = #{parentCode}
+    </update>
+</mapper>
