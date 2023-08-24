@@ -14,6 +14,7 @@ import java.util.List;
  * 해당 목적에 맞게 소스를 수정한다.
  */
 public class TreeMaker<T extends TreeDto> {
+    public static final String ROOT_MENU_ID = "0";
 
     /**
      * DB에서 조회한 리스트 재귀호출을 통하여 Tree 형태로 만든다.
@@ -146,7 +147,7 @@ public class TreeMaker<T extends TreeDto> {
      * @return Tree 형태의 정보를 담고 있는 목록
      */
     public List<T> getList(List<T> infoList) {
-        return getList(infoList, "0");
+        return getList(infoList, ROOT_MENU_ID);
     }
 
     /**
@@ -156,6 +157,6 @@ public class TreeMaker<T extends TreeDto> {
      * @return 화면에 보여질 HTML
      */
     public String getShowHtml(List<T> infoList) {
-        return getRoot(infoList, "0").getShowHtml();
+        return getRoot(infoList, ROOT_MENU_ID).getShowHtml();
     }
 }

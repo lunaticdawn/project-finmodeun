@@ -55,7 +55,7 @@
             <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(displayYn)">
                 , DISPLAY_YN
             </if>
-            , REG_ID
+            , CRE_ID
             , REG_DT
         ) VALUES (
             #{cmnCode}
@@ -70,7 +70,7 @@
             <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(displayYn)">
                 , #{displayYn}
             </if>
-            , #{regId}
+            , #{creId}
             , CURRENT_TIMESTAMP
         )
     </insert>

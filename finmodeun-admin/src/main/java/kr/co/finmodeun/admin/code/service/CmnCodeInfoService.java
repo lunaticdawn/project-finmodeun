@@ -3,10 +3,12 @@ package kr.co.finmodeun.admin.code.service;
 import kr.co.finmodeun.admin.code.dto.CmnCodeInfoDto;
 import kr.co.finmodeun.admin.code.mapper.CmnCodeInfoMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CmnCodeInfoService {

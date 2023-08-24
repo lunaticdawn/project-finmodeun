@@ -120,6 +120,14 @@ public class AccessLog {
             accessLogDto.setHostAddr(HostInfoUtils.INSTANCE.getHostName());
         }
 
+        if (StringUtils.isNotBlank(request.getHeader(WebCmnConstants.HttpHeaderKeys.USER_ID.code()))) {
+            accessLogDto.setUserId(request.getHeader(WebCmnConstants.HttpHeaderKeys.USER_ID.code()));
+        }
+
+        if (StringUtils.isNotBlank(request.getHeader(WebCmnConstants.HttpHeaderKeys.MENU_ID.code()))) {
+            accessLogDto.setMenuId(request.getHeader(WebCmnConstants.HttpHeaderKeys.MENU_ID.code()));
+        }
+
         String uri = request.getRequestURI();
         String queryString = request.getQueryString();
 

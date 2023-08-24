@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.finmodeun.admin.menu.mapper.CmsMenuInfoMapper">
+    <select id="selectCmsMenuInfoList" resultType="kr.co.finmodeun.admin.menu.dto.CmsMenuInfoDto">
+        /* kr.co.finmodeun.admin.menu.mapper.CmsMenuInfoMapper.selectCmsMenuInfoList */
+        SELECT
+            MENU_ID
+            , MENU_NAME
+            , PARENT_MENU_ID
+            , URI_ADDR
+            , MENU_LEVEL
+            , SORT_ORDER
+            , USE_YN
+            , MENU_ID AS ID
+            , PARENT_MENU_ID AS PARENT_ID
+        FROM
+            CMS_MENU_INFO
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+        ORDER BY
+            MENU_LEVEL, SORT_ORDER
+    </select>
+
+    <insert id="insertCmsMenuInfo">
+        /* kr.co.finmodeun.admin.menu.mapper.CmsMenuInfoMapper.insertCmsMenuInfo */
+        INSERT INTO CMS_MENU_INFO (
+            MENU_ID
+            , MENU_NAME
+            , PARENT_MENU_ID
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(uriAddr)">
+                , URI_ADDR
+            </if>
+            , MENU_LEVEL
+            , SORT_ORDER
+            , USE_YN
+            , CRE_ID
+            , CRE_DT
+        ) VALUES (
+            #{menuId}
+            , #{menuName}
+            , #{parentMenuId}
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(uriAddr)">
+                , #{uriAddr}
+            </if>
+            , #{menuLevel}
+            , #{sortOrder}
+            , 'Y'
+            , #{creId}
+            , CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateCmsMenuInfo">
+        /* kr.co.finmodeun.admin.menu.mapper.CmsMenuInfoMapper.updateCmsMenuInfo */
+        UPDATE CMS_MENU_INFO
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(menuName)">
+                , MENU_NAME = #{menuName}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(parentMenuId)">
+                , PARENT_MENU_ID = #{parentMenuId}
+            </if>
+            , URI_ADDR = #{uriAddr}
+            <if test="menuLevel != null">
+                , MENU_LEVEL = #{menuLevel}
+            </if>
+            <if test="sortOrder != null">
+                , SORT_ORDER = #{sortOrder}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                , USE_YN = #{useYn}
+            </if>
+            , MOD_ID = #{modId}
+            , MOD_DT = CURRENT_TIMESTAMP
+        </set>
+        WHERE
+            MENU_ID = #{menuId}
+    </update>
+</mapper>

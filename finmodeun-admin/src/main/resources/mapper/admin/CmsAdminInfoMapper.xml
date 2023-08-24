@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper">
+    <select id="selectCmsAdminInfoList" resultType="kr.co.finmodeun.admin.admin.dto.CmsAdminInfoDto">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.selectCmsAdminInfoList */
+        SELECT
+            admin.ADMIN_ID
+            , admin.ADMIN_NAME
+            , admin.ADMIN_TYPE
+            , admin.HP_NO
+            , admin.EMAIL_ADDR
+            , admin.PWD_CHANGE_DT
+            , admin.LOGIN_DT
+            , admin.LOGIN_FAILUER_CNT
+            , admin.LOGIN_FAILUER_DT
+            , admin.USE_YN
+            , admin_type.CODE_NAME AS ADMIN_TYPE_NAME
+        FROM
+            CMS_ADMIN_INFO admin
+            JOIN CMN_CODE_INFO admin_type
+                ON admin.ADMIN_TYPE = admin_type.CMN_CODE
+                AND admin_type.PARENT_CODE = 'ADMIN_TYPE'
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminId)">
+                AND admin.ADMIN_ID LIKE '%' + #{adminId} + '%'
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminName)">
+                AND admin.ADMIN_NAME LIKE '%' + #{adminName} + '%'
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminType)">
+                AND admin.ADMIN_TYPE = #{adminType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                AND admin.USE_YN = #{useYn}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCmsAdminInfo" resultType="kr.co.finmodeun.admin.admin.dto.CmsAdminInfoDto">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.selectCmsAdminInfo */
+        SELECT
+            ADMIN_ID
+            , ADMIN_PWD
+            , ADMIN_NAME
+            , ADMIN_TYPE
+            , HP_NO
+            , EMAIL_ADDR
+            , PWD_CHANGE_DT
+            , LOGIN_DT
+            , LOGIN_FAILUER_CNT
+            , LOGIN_FAILUER_DT
+            , USE_YN
+        FROM
+            CMS_ADMIN_INFO
+        WHERE
+            ADMIN_ID = #{adminId}
+    </select>
+
+    <insert id="insertCmsAdminInfo">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.insertCmsAdminInfo */
+        INSERT INTO CMS_ADMIN_INFO (
+            ADMIN_ID
+            , ADMIN_PWD
+            , ADMIN_NAME
+            , ADMIN_TYPE
+            , HP_NO
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(emailAddr)">
+                , EMAIL_ADDR
+            </if>
+            , PWD_CHANGE_DT
+            , CRE_ID
+            , CRE_DT
+        ) VALUES (
+            #{adminId}
+            , #{adminPwd}
+            , #{adminName}
+            , #{adminType}
+            , #{hpNo}
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(emailAddr)">
+                , #{emailAddr}
+            </if>
+            , CURRENT_TIMESTAMP
+            , #{creId}
+            , CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateCmsAdminInfo">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.updateCmsAdminInfo */
+        UPDATE CMS_ADMIN_INFO
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminName)">
+                , ADMIN_NAME = #{adminName}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminType)">
+                , ADMIN_TYPE = #{adminType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hpNo)">
+                , HP_NO = #{hpNo}
+            </if>
+            , EMAIL_ADDR = #{emailAddr}
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                , USE_YN = #{useYn}
+            </if>
+            , MOD_ID = #{modId}
+            , MOD_DT = CURRENT_TIMESTAMP
+        </set>
+        WHERE
+            ADMIN_ID = #{adminId}
+    </update>
+
+    <update id="updateAdminPwd">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.updateAdminPwd */
+        UPDATE CMS_ADMIN_INFO
+        SET
+            ADMIN_PWD = #{adminPwd}
+            , PWD_CHANGE_DT = CURRENT_TIMESTAMP
+        WHERE
+            ADMIN_ID = #{adminId}
+    </update>
+
+    <update id="updateLoginDt">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.updateLoginDt */
+        UPDATE CMS_ADMIN_INFO
+        SET
+            LOGIN_DT = CURRENT_TIMESTAMP
+            , LOGIN_FAILUER_CNT = 0
+            , LOGIN_FAILUER_DT = NULL
+        WHERE
+            ADMIN_ID = #{adminId}
+    </update>
+
+    <update id="updateLoginFailuerCnt">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.updateLoginFailuerCnt */
+        UPDATE CMS_ADMIN_INFO
+        SET
+            LOGIN_FAILUER_CNT = LOGIN_FAILUER_CNT + 1
+          , LOGIN_FAILUER_DT = CURRENT_TIMESTAMP
+        WHERE
+            ADMIN_ID = #{adminId}
+    </update>
+</mapper>

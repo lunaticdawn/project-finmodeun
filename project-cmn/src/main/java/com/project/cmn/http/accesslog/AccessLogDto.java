@@ -92,4 +92,14 @@ public class AccessLogDto {
      * {@link CmnStopWatch}
      */
     private CmnStopWatch stopWatch;
+
+    /**
+     * 사용자 아이디
+     */
+    private String userId;
+
+    /**
+     * 메뉴 아이디
+     */
+    private String menuId;
 }
