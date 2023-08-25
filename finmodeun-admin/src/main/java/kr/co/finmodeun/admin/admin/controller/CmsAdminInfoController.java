@@ -66,7 +66,7 @@ public class CmsAdminInfoController {
             throw new ServiceException("비밀번호와 비밀번호 확인이 서로 다릅니다.");
         }
 
-        if (PasswdCheckUtil.checkPasswd(param.getAdminPwd(), 3, 3, 3)) {
+        if (!PasswdCheckUtil.checkPasswd(param.getAdminPwd(), 3, 3, 3)) {
             throw new ServiceException("비밀번호의 형식이 맞지 않습니다.");
         }
 
@@ -98,7 +98,7 @@ public class CmsAdminInfoController {
             throw new ServiceException("비밀번호와 비밀번호 확인이 서로 다릅니다.");
         }
 
-        if (PasswdCheckUtil.checkPasswd(param.getAdminPwd(), 3, 3, 3)) {
+        if (!PasswdCheckUtil.checkPasswd(param.getAdminPwd(), 3, 3, 3)) {
             throw new ServiceException("비밀번호의 형식이 맞지 않습니다.");
         }
 

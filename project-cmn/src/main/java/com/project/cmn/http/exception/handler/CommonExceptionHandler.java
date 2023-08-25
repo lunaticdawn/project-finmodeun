@@ -3,8 +3,6 @@ package com.project.cmn.http.exception.handler;
 import com.project.cmn.http.WebCmnConstants;
 import com.project.cmn.http.accesslog.AccessLog;
 import com.project.cmn.http.accesslog.AccessLogDto;
-import com.project.cmn.http.exception.InvalidValueException;
-import com.project.cmn.http.exception.WebClientException;
 import com.project.cmn.http.exception.config.ExceptionItem;
 import com.project.cmn.http.exception.config.ExceptionsConfig;
 import com.project.cmn.http.util.MessageUtils;
@@ -136,7 +134,7 @@ public class CommonExceptionHandler {
      * @param exception {@link Exception}
      * @return {@link ModelAndView}
      */
-    @ExceptionHandler({InvalidValueException.class, WebClientException.class, Exception.class})
+    @ExceptionHandler
     protected ModelAndView exceptionHandler(Exception exception, HttpServletResponse response) {
         return getResponse(exception, exception.getMessage(), response);
     }
@@ -149,11 +147,13 @@ public class CommonExceptionHandler {
      * @return Exception 에 대한 Response
      */
     protected ModelAndView getResponse(Exception exception, String message, HttpServletResponse response) {
+        String errorMessage = "Exception name: [" + exception.getClass().getSimpleName() + "] " + exception.getMessage();
+
         if (exception instanceof ConstraintViolationException
                 || exception instanceof BindException) {
-            log.error(exception.getMessage());
+            log.error(errorMessage);
         } else {
-            log.error(exception.getMessage(), exception);
+            log.error(errorMessage, exception);
         }
 
         message = this.resolveMessage(exception, message);

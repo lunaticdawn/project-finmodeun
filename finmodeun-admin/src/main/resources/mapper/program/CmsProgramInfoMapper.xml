@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.finmodeun.admin.program.mapper.CmsProgramInfoMapper">
+    <select id="selectCmsProgramInfoList" resultType="kr.co.finmodeun.admin.program.dto.CmsProgramInfoDto">
+        /* kr.co.finmodeun.admin.program.mapper.CmsProgramInfoMapper.selectCmsProgramInfoList */
+        SELECT
+            PROGRAM_SEQ
+            , PROGRAM_NAME
+            , HTTP_METHOD
+            , URI_ADDR
+            , CRUD_TYPE
+            , USE_YN
+        FROM
+            CMS_PROGRAM_INFO
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(programName)">
+                AND PROGRAM_NAME LIKE '%' + #{programName} + '%'
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(httpMethod)">
+                AND HTTP_METHOD = #{httpMethod}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(crudType)">
+                AND CRUD_TYPE = #{crudType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertCmsProgramInfo">
+        /* kr.co.finmodeun.admin.program.mapper.CmsProgramInfoMapper.insertCmsProgramInfo */
+        INSERT INTO CMS_PROGRAM_INFO (
+            PROGRAM_NAME
+            , HTTP_METHOD
+            , URI_ADDR
+            , CRUD_TYPE
+            , USE_YN
+            , CRE_ID
+            , CRE_DT
+        ) VALUES (
+            #{programName}
+            , #{httpMethod}
+            , #{uriAddr}
+            , #{crudType}
+            , 'Y'
+            , #{creId}
+            , CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateCmsProgramInfo">
+        /* kr.co.finmodeun.admin.program.mapper.CmsProgramInfoMapper.updateCmsProgramInfo */
+        UPDATE CMS_PROGRAM_INFO
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(programName)">
+                , PROGRAM_NAME = #{programName}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(httpMethod)">
+                , HTTP_METHOD = #{httpMethod}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(uriAddr)">
+                , URI_ADDR = #{uriAddr}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(crudType)">
+                , CRUD_TYPE = #{crudType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                , USE_YN = #{useYn}
+            </if>
+            , MOD_ID = #{modId}
+            , MOD_DT = CURRENT_TIMESTAMP
+        </set>
+        WHERE
+            PROGRAM_SEQ = #{programSeq}
+    </update>
+</mapper>

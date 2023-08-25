@@ -2,6 +2,7 @@ package com.project.cmn.http.accesslog;
 
 
 import com.project.cmn.http.dto.BaseDto;
+import com.project.cmn.util.tree.TreeDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -98,6 +99,11 @@ public class AccessLogAspect {
             if (args != null && args.length > 0) {
                 for (Object arg : args) {
                     if (arg instanceof BaseDto dto) {
+                        dto.setCreId(AccessLog.getAccessLogDto().getUserId());
+                        dto.setModId(AccessLog.getAccessLogDto().getUserId());
+                    }
+
+                    if (arg instanceof TreeDto dto) {
                         dto.setCreId(AccessLog.getAccessLogDto().getUserId());
                         dto.setModId(AccessLog.getAccessLogDto().getUserId());
                     }

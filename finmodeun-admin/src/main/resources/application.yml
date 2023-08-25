@@ -40,3 +40,6 @@ project:
       - name: InvalidValueException
         status: 400
         res-code: 400
+      - name: DuplicateKeyException
+        status: 400
+        res-code: 601

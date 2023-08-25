@@ -1,6 +1,5 @@
 package kr.co.finmodeun.admin.menu.service;
 
-import com.project.cmn.http.accesslog.AccessLog;
 import com.project.cmn.util.tree.TreeMaker;
 import kr.co.finmodeun.admin.menu.dto.CmsMenuInfoDto;
 import kr.co.finmodeun.admin.menu.mapper.CmsMenuInfoMapper;
@@ -50,8 +49,6 @@ public class CmsMenuInfoService {
             param.setSortOrder(1);
         }
 
-        param.setCreId(AccessLog.getAccessLogDto().getUserId());
-
         return cmsMenuInfoMapper.insertCmsMenuInfo(param);
     }
 
@@ -62,8 +59,6 @@ public class CmsMenuInfoService {
      * @return 수정한 row 수
      */
     public int cmsMenuInfoModify(CmsMenuInfoDto param) {
-        param.setModId(AccessLog.getAccessLogDto().getUserId());
-
         return cmsMenuInfoMapper.updateCmsMenuInfo(param);
     }
 }
