@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.finmodeun.admin.auth.mapper.CmsAuthAdminRelMapper">
+    <select id="selectCmsAuthAdminRelList" resultType="kr.co.finmodeun.admin.auth.dto.CmsAuthAdminRelDto">
+        /* kr.co.finmodeun.admin.auth.mapper.CmsAuthAdminRelMapper.selectCmsAuthAdminRelList */
+        SELECT
+            auth_admin_rel.AUTH_CODE
+            , auth_admin_rel.ADMIN_ID
+            , admin_info.ADMIN_NAME
+        FROM
+            CMS_AUTH_ADMIN_REL auth_admin_rel
+            JOIN CMS_ADMIN_INFO admin_info
+                ON auth_admin_rel.ADMIN_ID = admin_info.ADMIN_ID
+        WHERE
+            auth_admin_rel.AUTH_CODE = #{authCode}
+    </select>
+
+    <insert id="insertCmsAuthAdminRels">
+        /* kr.co.finmodeun.admin.auth.mapper.CmsAuthAdminRelMapper.insertCmsAuthAdminRels */
+        INSERT INTO CMS_AUTH_ADMIN_REL (
+            AUTH_CODE
+            , ADMIN_ID
+            , CRE_ID
+            , CRE_DT
+        ) VALUES
+        <foreach collection="adminIds" item="adminId" separator=",">
+            (
+                #{authCode}
+                , #{adminId}
+                , #{creId}
+                , CURRENT_TIMESTAMP
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteCmsAuthAdminRel">
+        /* kr.co.finmodeun.admin.auth.mapper.CmsAuthAdminRelMapper.deleteCmsAuthAdminRel */
+        DELETE
+        FROM
+            CMS_AUTH_ADMIN_REL
+        WHERE
+            AUTH_CODE = #{authCode}
+    </delete>
+</mapper>

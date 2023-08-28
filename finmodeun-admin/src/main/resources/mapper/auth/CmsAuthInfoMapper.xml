@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.finmodeun.admin.auth.mapper.CmsAuthInfoMapper">
+    <select id="selectCmsAuthInfoList" resultType="kr.co.finmodeun.admin.auth.dto.CmsAuthInfoDto">
+        /* kr.co.finmodeun.admin.auth.mapper.CmsAuthInfoMapper.selectCmsAuthInfoList */
+        SELECT
+            AUTH_CODE
+            , AUTH_NAME
+            , USE_YN
+        FROM
+            CMS_AUTH_INFO
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                AND USE_YN = #{useYn}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(authName)">
+                AND AUTH_NAME LIKE '%' + #{authName} + '%'
+            </if>
+        </where>
+        ORDER BY
+            AUTH_CODE ASC
+    </select>
+
+    <insert id="insertCmsAuthInfo">
+        /* kr.co.finmodeun.admin.auth.mapper.CmsAuthInfoMapper.insertCmsAuthInfo */
+        INSERT INTO CMS_AUTH_INFO (
+            AUTH_CODE
+            , AUTH_NAME
+            , USE_YN
+            , CRE_ID
+            , CRE_DT
+        ) VALUES (
+            #{authCode}
+            , #{authName}
+            , 'Y'
+            , #{creId}
+            , CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateCmsAuthInfo">
+        /* kr.co.finmodeun.admin.auth.mapper.CmsAuthInfoMapper.updateCmsAuthInfo */
+        UPDATE CMS_AUTH_INFO
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(authName)">
+                , AUTH_NAME = #{authName}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(useYn)">
+                , USE_YN = #{useYn}
+            </if>
+            , MOD_ID = #{modId}
+            , MOD_DT = CURRENT_TIMESTAMP
+        </set>
+        WHERE
+            AUTH_CODE = #{authCode}
+    </update>
+</mapper>
