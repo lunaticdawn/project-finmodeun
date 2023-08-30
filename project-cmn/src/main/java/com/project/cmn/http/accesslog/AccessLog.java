@@ -1,6 +1,7 @@
 package com.project.cmn.http.accesslog;
 
 import com.project.cmn.http.WebCmnConstants;
+import com.project.cmn.http.jwt.JwtConfig;
 import com.project.cmn.util.HostInfoUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +30,12 @@ public class AccessLog {
      */
     @Getter
     private final AccessLogConfig accessLogConfig;
+
+    /**
+     * JWT 설정
+     */
+    @Getter
+    private final JwtConfig jwtConfig;
 
     /**
      * {@link ThreadLocalAccessLog} 을 내부에서 사용하기 위한 변수
@@ -118,10 +125,6 @@ public class AccessLog {
             accessLogDto.setHostAddr(HostInfoUtils.INSTANCE.getHostAddr());
         } else {
             accessLogDto.setHostAddr(HostInfoUtils.INSTANCE.getHostName());
-        }
-
-        if (StringUtils.isNotBlank(request.getHeader(WebCmnConstants.HttpHeaderKeys.USER_ID.code()))) {
-            accessLogDto.setUserId(request.getHeader(WebCmnConstants.HttpHeaderKeys.USER_ID.code()));
         }
 
         if (StringUtils.isNotBlank(request.getHeader(WebCmnConstants.HttpHeaderKeys.MENU_ID.code()))) {

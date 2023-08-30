@@ -1,6 +1,6 @@
 package com.project.cmn.http.validate.annotation;
 
-import com.project.cmn.http.util.PasswdCheckUtil;
+import com.project.cmn.http.util.PasswdCheckUtils;
 import jakarta.validation.*;
 
 import java.lang.annotation.Documented;
@@ -69,7 +69,7 @@ public @interface ValidatedPasswd {
 
         @Override
         public boolean isValid(String value, ConstraintValidatorContext context) {
-            return PasswdCheckUtil.checkPasswd(value, validatedPasswd.repeated(), validatedPasswd.consecutive(), validatedPasswd.combination());
+            return PasswdCheckUtils.checkPasswd(value, validatedPasswd.repeated(), validatedPasswd.consecutive(), validatedPasswd.combination());
         }
     }
 }

@@ -1,0 +1,50 @@
+server:
+  port: 9090
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+spring:
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mariadb://220.126.62.111:3306/mysql
+    username: test01
+    password: imsi!@12
+    hikari:
+      maximum-pool-size: 2
+  messages:
+    basename: messages/messages
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations:
+    - classpath*:mapper/**/*.xml
+  type-aliases-package: kr.co.finmodeun.admin
+
+project:
+  access:
+    log:
+      enabled: true
+      filter: true
+      aspect: true
+  exceptions:
+    item-list:
+      - name: ConstraintViolationException
+        status: 400
+        res-code: 400
+      - name: MethodArgumentNotValidException
+        status: 400
+        res-code: 400
+      - name: InvalidValueException
+        status: 400
+        res-code: 400
+      - name: DuplicateKeyException
+        status: 400
+        res-code: 601
+  jwt:
+    secret-key: pwggAtHyCCnOnqg4qto9dPwD99nigu0hCjrWIImIa0zvr/lMAc+1MWMF8C+zQEWRDnjUKtoAGDVA78j1BbRssg==
+    access-token-expire: 30m
+    refresh-token-expire: 7d
+    user-key: user_id

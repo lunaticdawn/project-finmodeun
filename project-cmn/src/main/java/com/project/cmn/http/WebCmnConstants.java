@@ -17,8 +17,9 @@ public class WebCmnConstants {
     public static final String LOG_KEY = "LOG_KEY";
 
     public enum HttpHeaderKeys {
-        USER_ID("X-USER-ID")
-        , MENU_ID("X-MENU-ID");
+        MENU_ID("X-MENU-ID")
+        , AUTHORIZATION("authorization")
+        , AUTHORITIES("authorities");
 
         private final String code;
 

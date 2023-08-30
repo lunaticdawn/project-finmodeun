@@ -1,5 +1,6 @@
 package com.project.cmn.http.accesslog;
 
+import com.project.cmn.http.jwt.JwtConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -23,8 +24,9 @@ public class AccessLogConfiguration implements WebMvcConfigurer, EnvironmentAwar
     @Override
     public void setEnvironment(Environment environment) {
         AccessLogConfig accessLogConfig = AccessLogConfig.init(environment);
+        JwtConfig jwtConfig = JwtConfig.init(environment);
 
-        accessLog = new AccessLog(accessLogConfig);
+        accessLog = new AccessLog(accessLogConfig, jwtConfig);
     }
 
     /**

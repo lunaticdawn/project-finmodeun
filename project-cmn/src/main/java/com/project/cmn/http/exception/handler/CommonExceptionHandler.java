@@ -3,6 +3,9 @@ package com.project.cmn.http.exception.handler;
 import com.project.cmn.http.WebCmnConstants;
 import com.project.cmn.http.accesslog.AccessLog;
 import com.project.cmn.http.accesslog.AccessLogDto;
+import com.project.cmn.http.exception.InvalidValueException;
+import com.project.cmn.http.exception.ServiceException;
+import com.project.cmn.http.exception.WebClientException;
 import com.project.cmn.http.exception.config.ExceptionItem;
 import com.project.cmn.http.exception.config.ExceptionsConfig;
 import com.project.cmn.http.util.MessageUtils;
@@ -55,7 +58,7 @@ public class CommonExceptionHandler {
     }
 
     /**
-     * {@link javax.validation.Validator} 에서 발생한 {@link ConstraintViolationException} 을 처리한다.
+     * {@link jakarta.validation.Validator} 에서 발생한 {@link ConstraintViolationException} 을 처리한다.
      *
      * @param exception {@link ConstraintViolationException}
      * @return {@link ModelAndView}
@@ -126,6 +129,26 @@ public class CommonExceptionHandler {
         }
 
         return getResponse(exception, this.sortConstraintViolationList(constraintViolationList), response);
+    }
+
+    @ExceptionHandler({ InvalidValueException.class, ServiceException.class, WebClientException.class })
+    protected ModelAndView customExceptionHandler(Exception exception, HttpServletResponse response) {
+        if (exception instanceof InvalidValueException invalidValueException) {
+            this.status =  invalidValueException.getStatus();
+            this.resCode = invalidValueException.getResCode();
+        }
+
+        if (exception instanceof ServiceException serviceException) {
+            this.status =  serviceException.getStatus();
+            this.resCode = serviceException.getResCode();
+        }
+
+        if (exception instanceof WebClientException webClientException) {
+            this.status =  webClientException.getStatus();
+            this.resCode = webClientException.getResCode();
+        }
+
+        return getResponse(exception, exception.getMessage(), response);
     }
 
     /**
