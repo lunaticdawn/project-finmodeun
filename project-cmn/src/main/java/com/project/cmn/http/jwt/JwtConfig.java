@@ -43,11 +43,6 @@ public class JwtConfig {
     private String refreshTokenExpire;
 
     /**
-     * 사용자 아이디 키
-     */
-    private String userKey;
-
-    /**
      * AccessToken 만료 시간. TimeUnit.MILLISECONDS
      */
     private long accessTokenExpireTime;
@@ -81,7 +76,7 @@ public class JwtConfig {
         } else if (StringUtils.endsWithIgnoreCase(timeStr, "m")) {
             result = TimeUnit.MILLISECONDS.convert(Integer.parseInt(StringUtils.removeEndIgnoreCase(timeStr, "m")), TimeUnit.MINUTES);
         } else if (StringUtils.endsWithIgnoreCase(timeStr, "s")) {
-            result = TimeUnit.MILLISECONDS.convert(Integer.parseInt(StringUtils.removeEndIgnoreCase(timeStr, "m")), TimeUnit.SECONDS);
+            result = TimeUnit.MILLISECONDS.convert(Integer.parseInt(StringUtils.removeEndIgnoreCase(timeStr, "s")), TimeUnit.SECONDS);
         }
 
         return result;

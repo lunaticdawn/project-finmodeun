@@ -47,4 +47,3 @@ project:
     secret-key: pwggAtHyCCnOnqg4qto9dPwD99nigu0hCjrWIImIa0zvr/lMAc+1MWMF8C+zQEWRDnjUKtoAGDVA78j1BbRssg==
     access-token-expire: 30m
     refresh-token-expire: 7d
-    user-key: user_id
