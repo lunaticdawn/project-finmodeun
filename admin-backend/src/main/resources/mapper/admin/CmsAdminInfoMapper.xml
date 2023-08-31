@@ -119,13 +119,15 @@
             ADMIN_ID = #{adminId}
     </update>
 
-    <update id="updateLoginDt">
+    <update id="updateLoginInfo">
         /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.updateLoginDt */
         UPDATE CMS_ADMIN_INFO
         SET
             LOGIN_DT = CURRENT_TIMESTAMP
             , LOGIN_FAILUER_CNT = 0
             , LOGIN_FAILUER_DT = NULL
+            , ACCESS_TOKEN = #{accessToken}
+            , REFRESH_TOKEN = #{refreshToken}
         WHERE
             ADMIN_ID = #{adminId}
     </update>
@@ -139,4 +141,33 @@
         WHERE
             ADMIN_ID = #{adminId}
     </update>
+
+    <update id="updateAccessToken">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.updateAccessToken */
+        UPDATE CMS_ADMIN_INFO
+        SET
+            ACCESS_TOKEN = #{accessToken}
+        WHERE
+            ADMIN_ID = #{adminId}
+    </update>
+
+    <select id="selectCountByAccessToken" resultType="int">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.selectCountByAccessToken */
+        SELECT
+            COUNT(0)
+        FROM
+            CMS_ADMIN_INFO
+        WHERE
+            ACCESS_TOKEN = #{accessToken}
+    </select>
+
+        <select id="selectCountByRefreshToken" resultType="int">
+        /* kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper.selectCountByRefreshToken */
+        SELECT
+            COUNT(0)
+        FROM
+            CMS_ADMIN_INFO
+        WHERE
+            REFRESH_TOKEN = #{refreshToken}
+    </select>
 </mapper>

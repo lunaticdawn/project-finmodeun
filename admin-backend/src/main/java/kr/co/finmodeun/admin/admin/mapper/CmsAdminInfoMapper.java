@@ -49,12 +49,12 @@ public interface CmsAdminInfoMapper {
     int updateAdminPwd(CmsAdminInfoDto param);
 
     /**
-     * 로그인 일시를 수정한다.
+     * 로그인 정보를 수정한다.
      *
-     * @param adminId 어드민 아이디
+     * @param param 어드민 로그인 정보
      * @return 수정한 row 수
      */
-    int updateLoginDt(@Param("adminId") String adminId);
+    int updateLoginInfo(CmsAdminInfoDto param);
 
     /**
      * 로그인 실패 횟수를 수정한다.
@@ -63,4 +63,29 @@ public interface CmsAdminInfoMapper {
      * @return 수정한 row 수
      */
     int updateLoginFailuerCnt(@Param("adminId") String adminId);
+
+    /**
+     * Access Token 을 수정한다.
+     *
+     * @param adminId 어드민 아이디
+     * @param accessToken  Access Token
+     * @return 수정한 row 수
+     */
+    int updateAccessToken(@Param("adminId") String adminId, @Param("accessToken") String accessToken);
+
+    /**
+     * 발급한 Access Token 인지 조회한다.
+     *
+     * @param accessToken Access Token
+     * @return 0: 발급한 Access Token 이 아님
+     */
+    int selectCountByAccessToken(@Param("accessToken") String accessToken);
+
+    /**
+     * 발급한 Refresh Token 인지 조회한다.
+     *
+     * @param refreshToken Refresh Token
+     * @return 0: 발급한 Refresh Token 이 아님
+     */
+    int selectCountByRefreshToken(@Param("refreshToken") String refreshToken);
 }

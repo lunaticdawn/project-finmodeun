@@ -42,8 +42,11 @@ project:
         res-code: 400
       - name: DuplicateKeyException
         status: 400
-        res-code: 601
+        res-code: 621
   jwt:
     secret-key: pwggAtHyCCnOnqg4qto9dPwD99nigu0hCjrWIImIa0zvr/lMAc+1MWMF8C+zQEWRDnjUKtoAGDVA78j1BbRssg==
     access-token-expire: 30m
     refresh-token-expire: 7d
+    permit-all-uris:
+      - /admin/login
+      - /admin/refresh

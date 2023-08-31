@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -41,6 +42,11 @@ public class JwtConfig {
      * RefreshToken 만료 시간을 나타내는 문자열
      */
     private String refreshTokenExpire;
+
+    /**
+     * 전체 허용인 URI 들
+     */
+    private List<String> permitAllUris;
 
     /**
      * AccessToken 만료 시간. TimeUnit.MILLISECONDS

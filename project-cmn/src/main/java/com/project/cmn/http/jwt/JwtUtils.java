@@ -1,9 +1,12 @@
 package com.project.cmn.http.jwt;
 
+import com.project.cmn.http.WebCmnConstants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -12,6 +15,8 @@ import java.util.Date;
 import java.util.Map;
 
 public class JwtUtils {
+    public static final String BEARER_PREFIX = "Bearer ";
+
     private JwtUtils() {}
 
     /**
@@ -63,7 +68,7 @@ public class JwtUtils {
      * @return 생성한 JWT
      */
     public static String genJwt(Key secretKey, Map<String, Object> claims, Date expireDate) {
-        return Jwts.builder().addClaims(claims).signWith(secretKey, SignatureAlgorithm.HS512).setExpiration(expireDate).compact();
+        return Jwts.builder().addClaims(claims).signWith(secretKey, SignatureAlgorithm.HS512).setIssuedAt(new Date()).setExpiration(expireDate).compact();
     }
 
     /**
@@ -99,5 +104,21 @@ public class JwtUtils {
      */
     public static Claims getBody(JwtConfig jwtConfig, String token) {
         return parseClaimsJws(jwtConfig, token).getBody();
+    }
+
+    /**
+     * {@link HttpServletRequest} 에서 Access Token 을 가져온다.
+     *
+     * @param request {@link HttpServletRequest}
+     * @return Access Token
+     */
+    public static String getAccessToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(WebCmnConstants.HttpHeaderKeys.AUTHORIZATION.code());
+
+        if (StringUtils.isNotBlank(bearerToken) && StringUtils.startsWith(bearerToken, BEARER_PREFIX)) {
+            return StringUtils.substring(bearerToken, BEARER_PREFIX.length());
+        }
+
+        return null;
     }
 }

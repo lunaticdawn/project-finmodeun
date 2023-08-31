@@ -86,9 +86,21 @@ public class CmsAdminInfoDto extends BaseDto {
     private LocalDateTime loginFailuerDt;
 
     /**
+     * Access Token
+     */
+    @JsonProperty("access_token")
+    private String accessToken;
+
+    /**
+     * Refresh Token
+     */
+    @JsonProperty("refresh_token")
+    private String refreshToken;
+
+    /**
      * 사용 여부
      */
-    @Pattern(regexp = "Y|N", groups = {Create.class, Modify.class})
+    @Pattern(regexp = "^Y|N$", groups = {Create.class, Modify.class})
     @JsonProperty("use_yn")
     private String useYn;
 

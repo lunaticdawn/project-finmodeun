@@ -1,4 +1,4 @@
-package kr.co.finmodeun.admin.config.security;
+package kr.co.finmodeun.admin.cmn.config.security;
 
 import com.project.cmn.http.jwt.JwtConfig;
 import com.project.cmn.http.jwt.JwtUtils;
@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,14 +31,12 @@ import static com.project.cmn.http.WebCmnConstants.HttpHeaderKeys;
 public class SecurityFilter extends OncePerRequestFilter {
     private final JwtConfig jwtConfig;
 
-    private static final String BEARER_PREFIX = "Bearer ";
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = resolveToken(request);
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String accessToken = JwtUtils.getAccessToken(request);
 
-        if (StringUtils.isNotBlank(token)) {
-            this.setAuthentication(token);
+        if (StringUtils.isNotBlank(accessToken)) {
+            this.setAuthentication(accessToken);
         }
 
         filterChain.doFilter(request, response);
@@ -58,25 +57,9 @@ public class SecurityFilter extends OncePerRequestFilter {
                         .map(SimpleGrantedAuthority::new)
                         .toList();
 
-        UserDetails principal = new User((String) claims.get("id"), "", authorities);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        UserDetails userDetails = new User((String) claims.get("id"), "", authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    /**
-     * {@link HttpServletRequest} 에서 Access Token 을 가져온다.
-     *
-     * @param request {@link HttpServletRequest}
-     * @return Access Token
-     */
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HttpHeaderKeys.AUTHORIZATION.code());
-
-        if (StringUtils.isNotBlank(bearerToken) && StringUtils.startsWith(bearerToken, BEARER_PREFIX)) {
-            return StringUtils.substring(bearerToken, BEARER_PREFIX.length());
-        }
-
-        return null;
     }
 }

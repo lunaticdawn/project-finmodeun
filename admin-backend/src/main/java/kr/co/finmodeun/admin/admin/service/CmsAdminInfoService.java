@@ -1,6 +1,6 @@
 package kr.co.finmodeun.admin.admin.service;
 
-import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.page.PageMethod;
 import com.project.cmn.http.WebCmnConstants.HttpHeaderKeys;
 import com.project.cmn.http.exception.ServiceException;
 import com.project.cmn.http.jwt.JwtConfig;
@@ -35,7 +35,7 @@ public class CmsAdminInfoService {
      */
     public List<CmsAdminInfoDto> adminInfoRetrieveList(CmsAdminInfoDto param) {
         if (param.getPageNum() != null && param.getPageNum() > 0) {
-            PageHelper.startPage(param.getPageNum(), param.getPageSize());
+            PageMethod.startPage(param.getPageNum(), param.getPageSize());
         }
 
         return cmsAdminInfoMapper.selectCmsAdminInfoList(param);
@@ -60,6 +60,10 @@ public class CmsAdminInfoService {
      */
     public int adminInfoCreate(CmsAdminInfoDto param) throws NoSuchAlgorithmException {
         param.setAdminPwd(Sha.encrypt512(param.getAdminPwd()));
+
+        if (StringUtils.equals(param.getAdminId(), "admin")) {
+            param.setCreId("SYSTEM");
+        }
 
         return cmsAdminInfoMapper.insertCmsAdminInfo(param);
     }
@@ -122,8 +126,6 @@ public class CmsAdminInfoService {
             throw new ServiceException("비밀번호가 틀립니다.");
         }
 
-        cmsAdminInfoMapper.updateLoginDt(param.getAdminId());
-
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("id", param.getAdminId());
@@ -133,6 +135,11 @@ public class CmsAdminInfoService {
         claims.put(HttpHeaderKeys.AUTHORITIES.code(), "AU0001");
 
         String accessToken = JwtUtils.getAccessToken(jwtConfig, claims);
+
+        param.setAccessToken(accessToken);
+        param.setRefreshToken(refreshToken);
+
+        cmsAdminInfoMapper.updateLoginInfo(param);
 
         return TokenDto.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
@@ -144,19 +151,28 @@ public class CmsAdminInfoService {
      * @return 새로운 Access Token
      */
     public TokenDto refresh(TokenDto param) {
+        if (cmsAdminInfoMapper.selectCountByRefreshToken(param.getRefreshToken()) == 0) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, 613);
+        }
+
         try {
             Claims claims = JwtUtils.getBody(jwtConfig, param.getRefreshToken());
+            String adminId = (String) claims.get("id");
 
             Map<String, Object> claimMap = new HashMap<>();
 
-            claimMap.put("id", claims.get("id"));
+            claimMap.put("id", adminId);
             claimMap.put(HttpHeaderKeys.AUTHORITIES.code(), "AU0001");
 
-            param.setAccessToken(JwtUtils.getAccessToken(jwtConfig, claimMap));
+            String accessToken = JwtUtils.getAccessToken(jwtConfig, claimMap);
+
+            cmsAdminInfoMapper.updateAccessToken(adminId, accessToken);
+
+            param.setAccessToken(accessToken);
         } catch (ExpiredJwtException e) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, 604);
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, 612);
         } catch (Exception e) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, 603);
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, 611);
         }
 
         return param;
