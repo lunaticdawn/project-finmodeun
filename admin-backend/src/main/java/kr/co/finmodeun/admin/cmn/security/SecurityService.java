@@ -1,4 +1,4 @@
-package kr.co.finmodeun.admin.cmn.service;
+package kr.co.finmodeun.admin.cmn.security;
 
 import com.project.cmn.http.exception.ServiceException;
 import com.project.cmn.http.security.jwt.JwtUtils;

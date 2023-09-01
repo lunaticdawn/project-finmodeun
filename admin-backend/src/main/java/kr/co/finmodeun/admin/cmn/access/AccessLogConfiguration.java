@@ -1,5 +1,7 @@
-package com.project.cmn.http.accesslog;
+package kr.co.finmodeun.admin.cmn.access;
 
+import com.project.cmn.http.accesslog.AccessLogConfig;
+import com.project.cmn.http.accesslog.AccessLogFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

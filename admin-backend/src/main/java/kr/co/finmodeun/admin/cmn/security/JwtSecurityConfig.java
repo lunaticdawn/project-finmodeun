@@ -1,4 +1,4 @@
-package kr.co.finmodeun.admin.cmn.config.security;
+package kr.co.finmodeun.admin.cmn.security;
 
 import com.project.cmn.http.security.SecurityConfig;
 import lombok.RequiredArgsConstructor;

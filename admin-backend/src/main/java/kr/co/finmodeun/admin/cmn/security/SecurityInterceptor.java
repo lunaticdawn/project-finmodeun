@@ -1,11 +1,10 @@
-package kr.co.finmodeun.admin.cmn.interceptor;
+package kr.co.finmodeun.admin.cmn.security;
 
 import com.project.cmn.http.accesslog.AccessLog;
 import com.project.cmn.http.security.SecurityConfig;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.finmodeun.admin.cmn.service.SecurityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -2,6 +2,7 @@ package kr.co.finmodeun.admin.admin.service;
 
 import com.github.pagehelper.page.PageMethod;
 import com.project.cmn.http.WebCmnConstants.HttpHeaderKeys;
+import com.project.cmn.http.accesslog.AccessLog;
 import com.project.cmn.http.exception.ServiceException;
 import com.project.cmn.http.security.SecurityConfig;
 import com.project.cmn.http.security.jwt.JwtUtils;
@@ -158,6 +159,8 @@ public class CmsAdminInfoService {
         try {
             Claims claims = JwtUtils.getBody(securityConfig.getJwt(), param.getRefreshToken());
             String adminId = (String) claims.get("id");
+
+            AccessLog.getAccessLogDto().setUserId(adminId);
 
             Map<String, Object> claimMap = new HashMap<>();
 

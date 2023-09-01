@@ -1,10 +1,15 @@
-package com.project.cmn.http.accesslog;
+package kr.co.finmodeun.admin.cmn.access;
 
 
+import com.project.cmn.http.accesslog.AccessLog;
+import com.project.cmn.http.accesslog.AccessLogConfig;
+import com.project.cmn.http.accesslog.AccessLogDto;
+import com.project.cmn.http.accesslog.CmnStopWatch;
 import com.project.cmn.util.JsonUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.finmodeun.admin.access.service.CmsAdminAccessHistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +38,12 @@ public class AccessLogInterceptor implements HandlerInterceptor {
     @Resource(name = "accessLog")
     private AccessLog accessLog;
 
+    /**
+     * 접근 이력을 등록하는 클래스
+     */
+    @Resource(name = "cmsAdminAccessHistService")
+    private  CmsAdminAccessHistService cmsAdminAccessHistService;
+
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         accessLog.start(request);
@@ -60,12 +71,19 @@ public class AccessLogInterceptor implements HandlerInterceptor {
         if (stopWatch != null) {
             if (stopWatch.isRunning()) {
                 stopWatch.stop();
-                accessLogDto.setDurationTime(stopWatch.getTotalTimeMillis());
             }
+
+            accessLogDto.setDurationTime(stopWatch.getTotalTimeMillis());
 
             if (accessLogConfig.isStopWatch()) {
                 log.info("\n{}", stopWatch.prettyPrintMillis());
             }
+        }
+
+        try {
+            cmsAdminAccessHistService.adminAccessHistCreate(accessLogDto);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
     }
 

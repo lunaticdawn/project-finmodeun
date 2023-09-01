@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.finmodeun.admin.access.mapper.CmsAdminAccessHistMapper">
+    <select id="selectCmsAdminAccessHistList" resultType="kr.co.finmodeun.admin.access.dto.CmsAdminAccessHistDto">
+        /* kr.co.finmodeun.admin.access.mapper.CmsAdminAccessHistMapper.selectCmsAdminAccessHistList */
+        SELECT
+            access_hist.ACCESS_HIST_SEQ
+            , access_hist.HTTP_METHOD
+            , access_hist.URI_ADDR
+            , access_hist.QUERY_STRING
+            , access_hist.REQUEST_BODY
+            , access_hist.OS_TYPE
+            , access_hist.BROWSER_TYPE
+            , access_hist.DEVICE_TYPE
+            , access_hist.CLIENT_ADDR
+            , access_hist.RES_STATUS
+            , access_hist.RES_CODE
+            , access_hist.RES_CNT
+            , access_hist.DURATION_TIME
+            , access_hist.LOG_KEY
+            , access_hist.MENU_ID
+            , access_hist.CRE_ID
+            , access_hist.CRE_DT
+            , program_info.PROGRAM_NAME
+            , program_info.CRUD_TYPE
+            , menu_info.MENU_NAME
+            , admin_info.ADMIN_NAME
+        FROM
+            CMS_ADMIN_ACCESS_HIST access_hist
+            LEFT JOIN CMS_PROGRAM_INFO program_info
+                ON access_hist.HTTP_METHOD = program_info.HTTP_METHOD
+                AND access_hist.URI_ADDR = program_info.URI_ADDR
+            LEFT JOIN CMS_MENU_INFO menu_info
+                ON access_hist.MENU_ID = menu_info.MENU_ID
+            LEFT JOIN CMS_ADMIN_INFO admin_info
+                ON access_hist.CRE_ID = admin_info.ADMIN_ID
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(httpMethod)">
+                AND access_hist.HTTP_METHOD = #{httpMethod}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(uriAddr)">
+                AND access_hist.URI_ADDR LIKE '%' + #{uriAddr} + '%'
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(osType)">
+                AND access_hist.OS_TYPE = #{osType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminName)">
+                AND admin_info.ADMIN_NAME LIKE '%' + #{adminName} + '%'
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertCmsAdminAccessHist">
+        /* kr.co.finmodeun.admin.access.mapper.CmsAdminAccessHistMapper.insertCmsAdminAccessHist */
+        INSERT INTO CMS_ADMIN_ACCESS_HIST (
+            HTTP_METHOD
+            , URI_ADDR
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(queryString)">
+                , QUERY_STRING
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(requestBody)">
+                , REQUEST_BODY
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(osType)">
+                , OS_TYPE
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(browserType)">
+                , BROWSER_TYPE
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(deviceType)">
+                , DEVICE_TYPE
+            </if>
+            , CLIENT_ADDR
+            , RES_STATUS
+            , RES_CODE
+            , RES_CNT
+            , DURATION_TIME
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(logKey)">
+                , LOG_KEY
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(menuId)">
+                , MENU_ID
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(creId)">
+                , CRE_ID
+            </if>
+            , CRE_DT
+        ) VALUES (
+            #{httpMethod}
+            , #{uriAddr}
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(queryString)">
+                , #{queryString}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(requestBody)">
+                , #{requestBody}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(osType)">
+                , #{osType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(browserType)">
+                , #{browserType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(deviceType)">
+                , #{deviceType}
+            </if>
+            , #{clientAddr}
+            , #{resStatus}
+            , #{resCode}
+            , #{resCnt}
+            , #{durationTime}
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(logKey)">
+                , #{logKey}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(menuId)">
+                , #{menuId}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(creId)">
+                , #{creId}
+            </if>
+            , CURRENT_TIMESTAMP
+        )
+    </insert>
+</mapper>

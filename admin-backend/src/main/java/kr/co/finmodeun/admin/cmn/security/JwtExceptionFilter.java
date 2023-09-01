@@ -1,4 +1,4 @@
-package kr.co.finmodeun.admin.cmn.config.security;
+package kr.co.finmodeun.admin.cmn.security;
 
 import com.project.cmn.http.util.ResponseUtils;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,14 +20,10 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            ResponseUtils.sendResponse(response, HttpStatus.UNAUTHORIZED, 602);
         } catch (JwtException e) {
-            log.error(e.getMessage(), e);
-
-            if (e instanceof ExpiredJwtException) {
-                ResponseUtils.sendResponse(response, HttpStatus.UNAUTHORIZED, 602);
-            } else {
-                ResponseUtils.sendResponse(response, HttpStatus.UNAUTHORIZED, 601);
-            }
+            ResponseUtils.sendResponse(response, HttpStatus.UNAUTHORIZED, 601);
         }
     }
 }
