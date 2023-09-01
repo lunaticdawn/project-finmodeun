@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Component
 @ConfigurationProperties(prefix = "project.access.log")
 public class AccessLogConfig {
     /**
@@ -26,21 +28,6 @@ public class AccessLogConfig {
     public static AccessLogConfig init(Environment environment) {
         return Binder.get(environment).bindOrCreate("project.access.log", AccessLogConfig.class);
     }
-
-    /**
-     * Access Log 사용 여부. default: false
-     */
-    private boolean enabled;
-
-    /**
-     * {@link AccessLogFilter} 의 사용 여부. default: false
-     */
-    private boolean filter;
-
-    /**
-     * {@link AccessLogAspect} 사용 여부. default: false
-     */
-    private boolean aspect;
 
     /**
      * 필터 순서. default: 0

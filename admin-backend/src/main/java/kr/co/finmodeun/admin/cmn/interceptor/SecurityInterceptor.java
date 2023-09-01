@@ -1,7 +1,7 @@
 package kr.co.finmodeun.admin.cmn.interceptor;
 
 import com.project.cmn.http.accesslog.AccessLog;
-import com.project.cmn.http.jwt.JwtConfig;
+import com.project.cmn.http.security.SecurityConfig;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,14 +15,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Slf4j
 public class SecurityInterceptor implements HandlerInterceptor {
-    @Resource(name = "jwtConfig")
-    private JwtConfig jwtConfig;
+    @Resource(name = "securityConfig")
+    private SecurityConfig securityConfig;
 
     @Resource(name = "securityService")
     private SecurityService securityService;
 
     @Override
-    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         if (isCheckAuthUri()) {
             // 사용자 아이디를 저장한다.
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -44,11 +44,11 @@ public class SecurityInterceptor implements HandlerInterceptor {
     private boolean isCheckAuthUri() {
         boolean isCheckAuthUrl = true;
 
-        if (jwtConfig.getPermitAllUris() != null && !jwtConfig.getPermitAllUris().isEmpty()) {
+        if (securityConfig.getPermitAllUris() != null && !securityConfig.getPermitAllUris().isEmpty()) {
             AntPathMatcher pathMatcher = new AntPathMatcher();
             String requestUri = AccessLog.getAccessLogDto().getRequestUri();
 
-            for (String permitAllUri : jwtConfig.getPermitAllUris()) {
+            for (String permitAllUri : securityConfig.getPermitAllUris()) {
                 if (pathMatcher.match(permitAllUri, requestUri)) {
                     isCheckAuthUrl = false;
 

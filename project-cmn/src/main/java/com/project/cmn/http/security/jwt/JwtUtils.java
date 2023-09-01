@@ -1,7 +1,10 @@
-package com.project.cmn.http.jwt;
+package com.project.cmn.http.security.jwt;
 
 import com.project.cmn.http.WebCmnConstants;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
@@ -82,17 +85,6 @@ public class JwtUtils {
         Key secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfig.getSecretKey()));
 
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
-    }
-
-    /**
-     * JWT 를 파싱한 후 {@link JwsHeader} 를 반환한다.
-     *
-     * @param jwtConfig {@link JwtConfig}
-     * @param token 파싱할 Token
-     * @return {@link JwsHeader}
-     */
-    public static JwsHeader getHeader(JwtConfig jwtConfig, String token) {
-        return parseClaimsJws(jwtConfig, token).getHeader();
     }
 
     /**

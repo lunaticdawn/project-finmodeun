@@ -1,7 +1,7 @@
 package kr.co.finmodeun.admin.cmn.config.security;
 
-import com.project.cmn.http.jwt.JwtConfig;
-import com.project.cmn.http.jwt.JwtUtils;
+import com.project.cmn.http.security.SecurityConfig;
+import com.project.cmn.http.security.jwt.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,8 +28,8 @@ import static com.project.cmn.http.WebCmnConstants.HttpHeaderKeys;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SecurityFilter extends OncePerRequestFilter {
-    private final JwtConfig jwtConfig;
+public class JwtSecurityFilter extends OncePerRequestFilter {
+    private final SecurityConfig securityConfig;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -48,7 +48,7 @@ public class SecurityFilter extends OncePerRequestFilter {
      * @param token 발급받은 Access Token
      */
     private void setAuthentication(String token) {
-        Claims claims = JwtUtils.getBody(jwtConfig, token);
+        Claims claims = JwtUtils.getBody(securityConfig.getJwt(), token);
 
         log.debug("### claims: {}", claims);
 

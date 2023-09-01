@@ -1,4 +1,4 @@
-package com.project.cmn.http.jwt;
+package com.project.cmn.http.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,16 +7,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
 @ToString
-@Component
-@ConfigurationProperties(prefix = "project.jwt")
+@ConfigurationProperties(prefix = "project.security.jwt")
 public class JwtConfig {
     /**
      * {@link Environment}에서 project.mybatis 설정을 가져와 {@link JwtConfig}로 변환한다.
@@ -42,11 +39,6 @@ public class JwtConfig {
      * RefreshToken 만료 시간을 나타내는 문자열
      */
     private String refreshTokenExpire;
-
-    /**
-     * 전체 허용인 URI 들
-     */
-    private List<String> permitAllUris;
 
     /**
      * AccessToken 만료 시간. TimeUnit.MILLISECONDS

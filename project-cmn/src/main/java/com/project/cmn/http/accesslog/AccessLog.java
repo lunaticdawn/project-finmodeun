@@ -1,7 +1,7 @@
 package com.project.cmn.http.accesslog;
 
 import com.project.cmn.http.WebCmnConstants;
-import com.project.cmn.http.jwt.JwtConfig;
+import com.project.cmn.http.security.SecurityConfig;
 import com.project.cmn.util.HostInfoUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class AccessLog {
     /**
      * Access Log 설정
@@ -32,10 +34,10 @@ public class AccessLog {
     private final AccessLogConfig accessLogConfig;
 
     /**
-     * JWT 설정
+     * Security 설정 설정
      */
     @Getter
-    private final JwtConfig jwtConfig;
+    private final SecurityConfig securityConfig;
 
     /**
      * {@link ThreadLocalAccessLog} 을 내부에서 사용하기 위한 변수
@@ -118,7 +120,7 @@ public class AccessLog {
         AccessLogDto accessLogDto = threadLocalAccessLog.get();
 
         accessLogDto.setRequestHeader(requestHeaders);
-        accessLogDto.setRequestMethod(request.getMethod());
+        accessLogDto.setHttpMethod(request.getMethod());
         accessLogDto.setClientAddr(request.getRemoteAddr());
 
         if (StringUtils.isNotBlank(HostInfoUtils.INSTANCE.getHostAddr())) {
@@ -193,7 +195,7 @@ public class AccessLog {
                     log.error(e.getMessage(), e);
                 }
 
-                accessLogDto.setRequestPayload(payload);
+                accessLogDto.setRequestBody(payload);
             }
         }
     }
@@ -242,7 +244,7 @@ public class AccessLog {
         byte[] content;
 
         if (response instanceof ContentCachingResponseWrapper wrapper) {
-            accessLogDto.setHttpStatus(wrapper.getStatus());
+            accessLogDto.setResStatus(wrapper.getStatus());
 
             content = wrapper.getContentAsByteArray();
 
@@ -270,11 +272,11 @@ public class AccessLog {
         responsePayload = StringUtils.trim(responsePayload);
 
         if (StringUtils.startsWith(responsePayload, "<")) {
-            accessLogDto.setResponsePayload("[HTML]");
+            accessLogDto.setResponseBody("[HTML]");
         } else {
             // Json 형태인 경우에만 내용을 담는다.
             if (StringUtils.startsWith(responsePayload, "[") || StringUtils.startsWith(responsePayload, "{")) {
-                accessLogDto.setResponsePayload(responsePayload);
+                accessLogDto.setResponseBody(responsePayload);
             }
         }
     }

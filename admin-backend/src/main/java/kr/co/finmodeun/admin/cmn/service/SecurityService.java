@@ -1,7 +1,7 @@
 package kr.co.finmodeun.admin.cmn.service;
 
 import com.project.cmn.http.exception.ServiceException;
-import com.project.cmn.http.jwt.JwtUtils;
+import com.project.cmn.http.security.jwt.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.finmodeun.admin.admin.mapper.CmsAdminInfoMapper;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package kr.co.finmodeun.admin.cmn.config.security;
 
-import com.project.cmn.http.jwt.JwtConfig;
+import com.project.cmn.http.security.SecurityConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
-    private final JwtConfig jwtConfig;
+public class JwtSecurityConfig {
+    private final SecurityConfig securityConfig;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,8 +27,8 @@ public class SecurityConfig {
         http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable());
 
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
-            if (jwtConfig.getPermitAllUris() != null && !jwtConfig.getPermitAllUris().isEmpty()) {
-                for (String permitAllUri : jwtConfig.getPermitAllUris()) {
+            if (securityConfig.getPermitAllUris() != null && !securityConfig.getPermitAllUris().isEmpty()) {
+                for (String permitAllUri : securityConfig.getPermitAllUris()) {
                     authorizationManagerRequestMatcherRegistry.requestMatchers(permitAllUri).permitAll();
                 }
             }
@@ -41,8 +41,8 @@ public class SecurityConfig {
             httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(new CustomAccessDeniedHandler());
         });
 
-        http.addFilterBefore(new SecurityFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new JwtExceptionFilter(), SecurityFilter.class);
+        http.addFilterBefore(new JwtSecurityFilter(securityConfig), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtExceptionFilter(), JwtSecurityFilter.class);
 
         return http.build();
     }

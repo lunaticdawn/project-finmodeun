@@ -3,8 +3,8 @@ package kr.co.finmodeun.admin.admin.service;
 import com.github.pagehelper.page.PageMethod;
 import com.project.cmn.http.WebCmnConstants.HttpHeaderKeys;
 import com.project.cmn.http.exception.ServiceException;
-import com.project.cmn.http.jwt.JwtConfig;
-import com.project.cmn.http.jwt.JwtUtils;
+import com.project.cmn.http.security.SecurityConfig;
+import com.project.cmn.http.security.jwt.JwtUtils;
 import com.project.cmn.util.cipher.Sha;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Service
 public class CmsAdminInfoService {
     private final CmsAdminInfoMapper cmsAdminInfoMapper;
-    private final JwtConfig jwtConfig;
+    private final SecurityConfig securityConfig;
 
     /**
      * 어드민 목록을 조회한다.
@@ -130,11 +130,11 @@ public class CmsAdminInfoService {
 
         claims.put("id", param.getAdminId());
 
-        String refreshToken = JwtUtils.getRefreshToken(jwtConfig, claims);
+        String refreshToken = JwtUtils.getRefreshToken(securityConfig.getJwt(), claims);
 
         claims.put(HttpHeaderKeys.AUTHORITIES.code(), "AU0001");
 
-        String accessToken = JwtUtils.getAccessToken(jwtConfig, claims);
+        String accessToken = JwtUtils.getAccessToken(securityConfig.getJwt(), claims);
 
         param.setAccessToken(accessToken);
         param.setRefreshToken(refreshToken);
@@ -156,7 +156,7 @@ public class CmsAdminInfoService {
         }
 
         try {
-            Claims claims = JwtUtils.getBody(jwtConfig, param.getRefreshToken());
+            Claims claims = JwtUtils.getBody(securityConfig.getJwt(), param.getRefreshToken());
             String adminId = (String) claims.get("id");
 
             Map<String, Object> claimMap = new HashMap<>();
@@ -164,7 +164,7 @@ public class CmsAdminInfoService {
             claimMap.put("id", adminId);
             claimMap.put(HttpHeaderKeys.AUTHORITIES.code(), "AU0001");
 
-            String accessToken = JwtUtils.getAccessToken(jwtConfig, claimMap);
+            String accessToken = JwtUtils.getAccessToken(securityConfig.getJwt(), claimMap);
 
             cmsAdminInfoMapper.updateAccessToken(adminId, accessToken);
 
